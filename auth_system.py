@@ -15,6 +15,7 @@ class AuthSystem:
 		res = Request(
 			"post",
 			"/auth/init",
+			{},
 			{
 				"client_id":		CLIENT_ID,
 				"client_secret":	CLIENT_SECRET,

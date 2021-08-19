@@ -4,7 +4,7 @@ import sys
 import re
 
 def input_option(prompt, options):
-	print(prompt)
+	print("\n" + prompt)
 	option = ""
 	i = 0
 	for option in options:
@@ -30,6 +30,8 @@ def get_connectors_with_capability(capability):
 	).call()
 	connectors = {}
 	for connector in res["connectors"]:
+		print("\t\t", connector["name"])
+		print(connector["capabilities"])
 		if capability in connector["capabilities"]:
 			connectors[connector["name"]] = connector
 	return connectors

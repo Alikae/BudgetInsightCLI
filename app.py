@@ -1,6 +1,7 @@
 from auth_system import AuthSystem
 from utils import input_option
 from bank import Bank
+from wealth import Wealth
 
 class App:
 
@@ -11,11 +12,13 @@ class App:
 	def run(self):
 		while True:
 			# Choose an api to interact with
-			apis = ["bank", "wealth", "bill"]
+			apis = ["bank", "wealth", "bill", "Quit"]
 			index = input_option(
 				"Choose an api: ",
 				apis,
 			)
+			if index == 3:
+				return
 			self.api = apis[index]
 			print("API " + self.api + " :")
 			getattr(self, self.api)()
@@ -24,7 +27,7 @@ class App:
 		Bank(self.auth_system).run()
 
 	def wealth(self):
-		pass
+		Wealth(self.auth_system).run()
 
 	def bill(self):
 		pass

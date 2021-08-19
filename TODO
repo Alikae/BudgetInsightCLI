@@ -7,3 +7,6 @@ WHY TF wrongpass is not a connection return and it has a variable number of fiel
 How to force "bug" connection state? setting it in "openapiwebsite" doesn't seem to do anything...
 
 No FormField documentation found
+
+TYPO https://docs.budget-insight.com/guides/custom-connection-implementation:
+/connection/ should be /connections/
