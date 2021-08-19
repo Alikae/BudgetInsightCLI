@@ -1,5 +1,6 @@
 from utils import input_option, get_connectors_with_capability, get_connector_fields, fill_fields
 from rich import print
+from request_system import Request
 
 class Bank:
 
@@ -11,25 +12,24 @@ class Bank:
 			index = input_option(
 				"What do you want to do ?",
 				[
-					"Add an account",
-					"Add a transaction",
+					"Add a connection",
 					"See my accounts",
 					"See my transactions",
 					"Back",
 				],
 			)
 			if index == 0:
-				self.add_account()
+				self.add_connection()
 			elif index == 1:
 				pass
 			elif index == 2:
 				pass
 			elif index == 3:
-				pass
-			elif index == 4:
 				return
-
-	def add_account(self):
+	
+	def add_connection(self):
+		""" Add a connection between the users and a bank account
+		"""
 		connectors = get_connectors_with_capability("bank")
 		connectors_names = list(connectors.keys())
 		index = input_option(
@@ -38,8 +38,29 @@ class Bank:
 		)
 		connector = connectors[connectors_names[index]]
 		fields = get_connector_fields(connector["id"])
-		print(fields)
-		filled_fields = fill_fields(fields)
-		print(filled_fields)
+		while True:
+			filled_fields = fill_fields(fields)
+			print(filled_fields)
+			json = filled_fields.copy()
+			json["id_connector"] = connector["id"]
+			res = Request(
+				"post",
+				f"/users/{self.auth_system.user['id']}/connections",
+				self.auth_system.init_request_header(),
+				json,
+			).call()
+			print(res)
+			if handle_connection_state_errors(res):
+				break
+		print("Connection created!")
 
-		# handle connection state errors
+def handle_connection_state_errors(res):
+	# TODO ?
+	if "code" in res and res["code"] == "wrongpass":
+		print("Incorrect Password")
+		return False
+	if res["state"]:
+		print("Unhandled Error.")
+		sys.exit()
+	return True
+

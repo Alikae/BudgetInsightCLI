@@ -39,11 +39,9 @@ class AuthSystem:
 		}
 		f.close()
 	
-	def init_request(self):
+	def init_request_header(self):
 		return {
-			"headers":	{
-				"Content-Type":		"application/json",
-				"Authorization":	"OAuth " + self.user["token"],
-			},
+			"Content-Type":		"application/json",
+			"Authorization":	"OAuth " + self.user["token"],
 		}
 

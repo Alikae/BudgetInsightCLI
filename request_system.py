@@ -1,7 +1,13 @@
 from config import BASE_URL
 import requests
+import os
 
 class Request:
+
+	if "DEBUG" in os.environ:
+		debug = True
+	else:
+		debug = False
 
 	def __init__(self, method, url, headers = {}, json = {}):
 		self.method = method
@@ -10,5 +16,14 @@ class Request:
 		self.json = json
 	
 	def call(self):
+		if Request.debug:
+			print(self)
 		res = getattr(requests, self.method)(self.url, headers=self.headers, json=self.json)
-		return res.json()
+		json = res.json()
+		if Request.debug:
+			print(json)
+		return json
+
+	def __str__(self):
+		return self.method.upper() + " " + self.url + "\nHeaders " + str(self.headers) + "\nJSON " + str(self.json)
+
