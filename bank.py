@@ -49,6 +49,8 @@ class Bank:
 			self.auth_system.init_request_header(),
 		).call()
 		print("This month:")
+		if not len(res["accounts"]):
+			print("No accounts linked yet! Add a connection first.")
 		for account in res["accounts"]:
 			res = Request(
 				"get",
@@ -58,6 +60,4 @@ class Bank:
 			print(account["original_name"])
 			for transaction in res["transactions"]:
 				print("\t", transaction["date"], ":", transaction["value"], transaction["type"])
-		if not len(res["accounts"]):
-			print("No accounts linked yet! Add a connection first.")
 

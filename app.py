@@ -2,6 +2,7 @@ from auth_system import AuthSystem
 from utils import input_option, get_connectors_with_capability, get_connector_fields, fill_fields
 from bank import Bank
 from wealth import Wealth
+from bill import Bill
 from request_system import Request
 
 class App:
@@ -84,7 +85,7 @@ class App:
 		Wealth(self.auth_system).run()
 
 	def bill(self):
-		pass
+		Bill(self.auth_system).run()
 
 def handle_connection_state_errors(res):
 	# TODO ?

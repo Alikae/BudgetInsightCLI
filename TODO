@@ -11,4 +11,6 @@ No FormField documentation found
 TYPO https://docs.budget-insight.com/guides/custom-connection-implementation:
 /connection/ should be /connections/
 
-move add_connection to App
+CANT ACCESS SUBSCRIPTIONS NEITHER DOCUMENTS WHEN REPRODUCING EXACT SAME STEPS AS PIERRE
+When i take in my cli domain and user from pierre, it work
+ASK QUENTIN

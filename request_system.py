@@ -20,6 +20,7 @@ class Request:
 		if Request.debug:
 			self.print()
 		res = getattr(requests, self.method)(self.url, headers=self.headers, json=self.json)
+		print(res)
 		json = res.json()
 		if Request.debug:
 			print("Result:")

@@ -39,6 +39,8 @@ class AuthSystem:
 			"token":	f.readline(),
 		}
 		f.close()
+		if self.user["token"][-1] == "\n":
+			self.user["token"] = self.user["token"][:-1]
 	
 	def init_request_header(self):
 		return {
