@@ -1,4 +1,6 @@
 from utils import input_option
+from request_system import Request
+from rich import print
 
 class Wealth:
 
@@ -10,39 +12,56 @@ class Wealth:
 			index = input_option(
 				"What do you want to do ?",
 				[
-					"Add a connection",
-					"See my patrimony accounts",
-					"See my investments / history",
+					"See my investments",
+					"See my history",
 					"Back",
 				],
 			)
-			if index == 3:
+			if index == 0:
+				self.get_investments()
+			elif index == 1:
+				self.get_history()
+			elif index == 2:
 				return
 
-	def add_connection(self):
-		""" Add a connection between the users and a bank account
-		"""
-		connectors = get_connectors_with_capability("bank")
-		connectors_names = list(connectors.keys())
-		index = input_option(
-			"Choose a connector:",
-			connectors_names
-		)
-		connector = connectors[connectors_names[index]]
-		fields = get_connector_fields(connector["id"])
-		while True:
-			filled_fields = fill_fields(fields)
-			print(filled_fields)
-			json = filled_fields.copy()
-			json["id_connector"] = connector["id"]
-			connection = Request(
-				"post",
-				f"/users/{self.auth_system.user['id']}/connections",
-				self.auth_system.init_request_header(),
-				json,
-			).call()
-			if handle_connection_state_errors(connection):
-				break
-		print("Connection created!")
-		self.activate_accounts(connection["id"])
+	def get_investments(self):
+		res = Request(
+			"get",
+			f"/users/{self.auth_system.user['id']}/investments",
+			self.auth_system.init_request_header(),
+		).call()
+		if not handle_connection_state_errors(res):
+			return
+		print("Total:", res["valuation"], "(", res["diff_percent"], "%)")
+		for investment in res["investments"]:
+			print("\t", investment["label"], "(", investment["id"], ")")
+			print("\t\t", investment["valuation"], "(", investment["diff_percent"], "%)")
 
+	def get_history(self):
+		while True:
+			res = input("Give an investment ID (0 to quit)")
+			try:
+				res = int(res)
+				if res == 0:
+					return
+				investment_id = res
+				break
+			except ValueError:
+				print("enter a number please")
+		res = Request(
+			"get",
+			f"/users/{self.auth_system.user['id']}/investments/{investment_id}/history",
+			self.auth_system.init_request_header(),
+		).call()
+		for history in res["investmentvalues"]:
+			print(history["vdate"], "(", history["unitvalue"], ")")
+		if len(res["investmentvalues"] == 0):
+			print("No History")
+
+
+def handle_connection_state_errors(res):
+	if "code" in res:
+		if res["code"] == "noAccount":
+			print("Link an account first.")
+			return False
+	return True
